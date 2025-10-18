@@ -1,19 +1,25 @@
 # open a new tmux window with yazi for the phone
 
 function :phone() {
+  local script_dir="${${(%):-%x}:A:h}"
+  local mtp_script="$script_dir/src/mtp-mnt.sh"
+  
   if [[ -n $TMUX ]]; then
-    tmux new-window -n phone && "$HOME/.zsh/plugins/local/zsh-yazi-mount/src/mtp-mnt.zsh"
+    tmux new-window -n phone "$mtp_script"
   else
-    "$HOME/.zsh/plugins/local/zsh-yazi-mount/src/mtp-mnt.zsh"
+"$mtp_script"
   fi
 }
 
 # open a new tmux window with yazi for the usb
 
 function :usb() {
+  local script_dir="${${(%):-%x}:A:h}"
+  local usb_script="$script_dir/src/usb-mnt.sh"
+
   if [[ -n $TMUX ]]; then
-    tmux new-window -n usb "$HOME/.zsh/plugins/local/zsh-yazi-mount/src/mtp-mnt.zsh"
+    tmux new-window -n usb "$usb_script"
   else
-    "$HOME/.zsh/plugins/local/zsh-yazi-mount/src/mtp-mnt.zsh"
+"$usb_script"
   fi
 }
