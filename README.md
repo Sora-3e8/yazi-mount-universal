@@ -1,10 +1,7 @@
 # USB Mount & Yazi Launcher 🐧📦
 
-A lightweight Bash script to mount USB partitions via `udisksctl`, open them in
-[`yazi`](https://github.com/sxyazi/yazi), and unmount them afterward – safe, clean, and user-friendly.
-
-> Note:
-> This repository is currently inactive. It is neither maintained nor further developed. Requests will not be processed. Ideas can be submitted, but a timely response should not be expected. Thank you for your understanding.
+A lightweight Bash script to mount/unmount USB partitions via `udisksctl`, open them in
+[`yazi`](https://github.com/sxyazi/yazi)
 
 ---
 
@@ -21,38 +18,31 @@ A lightweight Bash script to mount USB partitions via `udisksctl`, open them in
 
 ## 🚀 Installation & Usage
 
-1. Clone or copy the script:
+1. Clone and run install script:
 
 ```bash
-git clone https://github.com/splixx05/zsh-yazi-mount.git "$ZSH/custom/plugins/zsh-yazi-mount"
+git clone https://github.com/Sora-3e8/yazi-mount-universal
+# The make script install the script into target directory
+sudo make install
+
 ```
 
-2. Activate the plugin in your /.zshrc under "plugins" like so:
-
-```bash
-  plugins=(git ... zsh-mnt ...)
-```
-
-3. Usage in terminal:
+2. Usage in terminal and yazi:
 
 **For USB type this**
 
 ```bash
   $ :usb
 ```
+> Note:
+> The original phone mounting feature was removed as it was not ported yet into the new format.
+> This will be hopefully re-added later once proper solution is in place.
 
-**For Mobilephone type this**
-
-```bash
-  $ :phone
-```
-
-4. Browse the mounted device with yazi – once you quit yazi, the device will be automatically unmounted.
+3. Browse the mounted device with yazi – once you quit yazi.
 
 ## 📋 Requirements
 
-- bash/zsh
-- Oh-My-Zsh
+- bash
 - yazi
 - udisksctl
 - lsblk
@@ -77,16 +67,9 @@ Make sure your user has permission to use udisksctl (usually no sudo required fo
 1. Remove the plugin folder:
 
    ```bash
-   rm -rf ~/.oh-my-zsh/custom/plugins/zsh-yazi-mount
+   sudo make uninstall
+   # Or if you want to manually remove it
+   sudo rm /usr/local/bin/:usb 
 
    ```
-
-2. Remove zsh-yazi-mount from the plugins=(...) line in your ~/.zshrc.
-
-3. Restart your terminal or run:
-
-```bash
-source ~/.zshrc
-```
-
-Optional: If you no longer need the additional software (udisksctl, lsblk, noto-fonts-emoji), you can uninstall them using your package manager.
+2. Optional: If you no longer need the additional software (udisksctl, lsblk, noto-fonts-emoji), you can uninstall them using your package manager.

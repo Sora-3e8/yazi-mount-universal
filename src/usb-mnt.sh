@@ -5,7 +5,8 @@ echo "📦 Available removable partitions:"
 lsblk -o NAME,SIZE,TYPE,MOUNTPOINT | grep -E '^sd.*part'
 
 # Collect only /dev/sdX-type partitions (no nvme, loop, etc.)
-mapfile -t devices < <(lsblk -lnpo NAME,TYPE | awk '$1 ~ "/dev/sd" && $2 == "part" {print $1}')
+
+mapfile -t devices < <(lsblk -lnpo NAME,TYPE,LABEL,SIZE | awk '$1 ~ "/dev/sd" && $2 == "part" {if(NF==3){$4=$3; $3="[no label]";} print $1,$3,$4 }')
 
 # Exit if no suitable devices are found
 if [[ ${#devices[@]} -eq 0 ]]; then
@@ -17,7 +18,7 @@ echo
 echo "🔍 Please choose a device to mount (or type 'q' to quit):"
 
 # Use gum for selection menu
-selected=$(gum choose "${devices[@]}")
+selected=$(gum choose "${devices[@]}"| awk '{print $1}')
 if [[ -z "$selected" ]]; then
   echo "👋 Exited by user."
   exit 0
@@ -28,9 +29,10 @@ dev="$selected"
 MOUNTED_PATH=$(lsblk -npo MOUNTPOINT "$dev" | grep -v '^$')
 
 if [[ -n "$MOUNTED_PATH" ]]; then
-  echo "⚠️ WARNING: Device $dev is already mounted at: $MOUNTED_PATH"
-  if ! gum confirm "❓ Do you still want to open it in Yazi?"; then
-    echo "❌ Aborted by user."
+  echo "✅ Device $dev is already mounted at: $MOUNTED_PATH"
+  if gum confirm "❓ Do you want to umount the device"; then
+    echo "🔌 Unmounting $dev..."
+    udisksctl unmount -b "$dev"
     exit 0
   fi
   MOUNTPOINT="$MOUNTED_PATH"
@@ -49,16 +51,6 @@ else
 fi
 
 # Confirm before launching Yazi
-echo "✅ Device ready at: $MOUNTPOINT"
-gum input --placeholder "🕹️  Press [Enter] to open Yazi..." >/dev/null
-
-# Launch Yazi in the mounted directory
-yazi "$MOUNTPOINT"
-
-# Unmount only if we mounted it ourselves
-if [[ -z "$MOUNTED_PATH" ]]; then
-  echo "🔌 Unmounting $dev..."
-  udisksctl unmount -b "$dev"
+if gum confirm "Do you want to open $MOUNTPOINT in yazi?"; then
+  yazi "$MOUNTPOINT"
 fi
-
-echo "✅ Device has been unmounted"
