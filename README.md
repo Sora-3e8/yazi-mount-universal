@@ -9,9 +9,8 @@ A lightweight Bash script to mount/unmount USB partitions via `udisksctl`, open 
 
 - Lists only removable `/dev/sdX` partitions (ignores NVMe/system drives)
 - Interactive selection menu with manual quit option
-- Warns if a partition is already mounted
 - Cleanly extracts the mount path using Bash
-- Automatically unmounts after closing `yazi`
+- Mount/unmount removable partitions
 - Zero dependencies beyond `udisksctl`, `lsblk`, and `yazi`
 
 ---
